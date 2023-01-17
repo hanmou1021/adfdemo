@@ -1,0 +1,146 @@
+{
+	"name": "demensiontype2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable37",
+						"type": "DatasetReference"
+					},
+					"name": "origindem"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable38",
+						"type": "DatasetReference"
+					},
+					"name": "newdemension"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable39",
+						"type": "DatasetReference"
+					},
+					"name": "originupdate"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable40",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "unchanged"
+				},
+				{
+					"name": "changed"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "exists1"
+				},
+				{
+					"name": "changetoarchive"
+				},
+				{
+					"name": "union1"
+				},
+				{
+					"name": "union2"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {WWI Supplier ID} as integer,",
+				"          Supplier as string,",
+				"          Category as string,",
+				"          {Primary Contact} as integer,",
+				"          {Supplier Reference} as string,",
+				"          {Payment Days} as integer,",
+				"          {Postal Code} as string,",
+				"          supplierkey as long,",
+				"          {valid from} as timestamp,",
+				"          {valid to} as timestamp,",
+				"          status as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> origindem",
+				"source(output(",
+				"          {WWI Supplier ID} as integer,",
+				"          Supplier as string,",
+				"          Category as string,",
+				"          {Primary Contact} as integer,",
+				"          {Supplier Reference} as string,",
+				"          {Payment Days} as integer,",
+				"          {Postal Code} as string,",
+				"          supplierkey as long,",
+				"          {valid from} as timestamp,",
+				"          {valid to} as timestamp,",
+				"          status as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> newdemension",
+				"source(output(",
+				"          {WWI Supplier ID} as integer,",
+				"          Supplier as string,",
+				"          Category as string,",
+				"          {Primary Contact} as integer,",
+				"          {Supplier Reference} as string,",
+				"          {Payment Days} as integer,",
+				"          {Postal Code} as string,",
+				"          supplierkey as long,",
+				"          {valid from} as timestamp,",
+				"          {valid to} as timestamp,",
+				"          status as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> originupdate",
+				"origindem, newdemension exists(origindem@{WWI Supplier ID} == newdemension@{WWI Supplier ID}",
+				"     && origindem@Supplier == newdemension@Supplier",
+				"     && origindem@Category == newdemension@Category,",
+				"     negate:false,",
+				"     broadcast: 'auto')~> unchanged",
+				"newdemension, unchanged exists(newdemension@{WWI Supplier ID} == origindem@{WWI Supplier ID}",
+				"     && newdemension@Supplier == origindem@Supplier",
+				"     && newdemension@Category == origindem@Category,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> changed",
+				"changed derive({valid from} = currentUTC(),",
+				"          {valid to} = addMonths(currentUTC(),12)) ~> derivedColumn1",
+				"originupdate, unchanged exists(originupdate@{WWI Supplier ID} == origindem@{WWI Supplier ID}",
+				"     && originupdate@Supplier == origindem@Supplier,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> exists1",
+				"exists1 derive(status = 'Archive',",
+				"          {valid to} = currentUTC()) ~> changetoarchive",
+				"derivedColumn1, changetoarchive union(byName: true)~> union1",
+				"union1, unchanged union(byName: true)~> union2",
+				"union2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}

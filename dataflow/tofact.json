@@ -1,0 +1,161 @@
+{
+	"name": "tofact",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable58",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable57",
+						"type": "DatasetReference"
+					},
+					"name": "source3"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable59",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "join1"
+				},
+				{
+					"name": "addtime"
+				},
+				{
+					"name": "surrogateKey1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "aggregate1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          PurchaseOrderLineID as integer,",
+				"          PurchaseOrderID as integer,",
+				"          StockItemID as integer,",
+				"          OrderedOuters as integer,",
+				"          Description as string,",
+				"          ReceivedOuters as integer,",
+				"          PackageTypeID as integer,",
+				"          ExpectedUnitPricePerOuter as decimal(18,2),",
+				"          LastReceiptDate as date,",
+				"          IsOrderLineFinalized as boolean,",
+				"          LastEditedBy as integer,",
+				"          LastEditedWhen as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source2",
+				"source(output(",
+				"          PurchaseOrderID as integer,",
+				"          SupplierID as integer,",
+				"          OrderDate as date,",
+				"          DeliveryMethodID as integer,",
+				"          ContactPersonID as integer,",
+				"          ExpectedDeliveryDate as date,",
+				"          SupplierReference as string,",
+				"          IsOrderFinalized as boolean,",
+				"          Comments as string,",
+				"          InternalComments as string,",
+				"          LastEditedBy as integer,",
+				"          LastEditedWhen as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source3",
+				"source2, source3 join(source2@PurchaseOrderID == source3@PurchaseOrderID,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 derive(ingestdate = currentUTC()) ~> addtime",
+				"select1 keyGenerate(output(skey as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"addtime select(mapColumn(",
+				"          PurchaseOrderLineID,",
+				"          PurchaseOrderID = source2@PurchaseOrderID,",
+				"          StockItemID,",
+				"          OrderedOuters,",
+				"          Description,",
+				"          ReceivedOuters,",
+				"          PackageTypeID,",
+				"          ExpectedUnitPricePerOuter,",
+				"          LastReceiptDate,",
+				"          IsOrderLineFinalized,",
+				"          LastEditedBy = source2@LastEditedBy,",
+				"          LastEditedWhen = source2@LastEditedWhen,",
+				"          PurchaseOrderID = source3@PurchaseOrderID,",
+				"          SupplierID,",
+				"          OrderDate,",
+				"          DeliveryMethodID,",
+				"          ContactPersonID,",
+				"          ExpectedDeliveryDate,",
+				"          SupplierReference,",
+				"          IsOrderFinalized,",
+				"          Comments,",
+				"          InternalComments,",
+				"          LastEditedBy = source3@LastEditedBy,",
+				"          LastEditedWhen = source3@LastEditedWhen,",
+				"          ingestdate",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"surrogateKey1 aggregate(groupBy(PurchaseOrderLineID),",
+				"     each(match(name!='PurchaseOrderLineID'), $$ = first($$))) ~> aggregate1",
+				"aggregate1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          {Purchase Key} as long,",
+				"          {Date Key} as date,",
+				"          {Supplier Key} as integer,",
+				"          {Stock Item Key} as integer,",
+				"          {WWI Purchase Order ID} as integer,",
+				"          {Ordered Outers} as integer,",
+				"          {Ordered Quantity} as integer,",
+				"          {Received Outers} as integer,",
+				"          Package as string,",
+				"          {Is Order Finalized} as boolean,",
+				"          {Lineage Key} as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          {Purchase Key} = skey,",
+				"          {Date Key} = OrderDate,",
+				"          {Supplier Key} = SupplierID,",
+				"          {Stock Item Key} = StockItemID,",
+				"          {WWI Purchase Order ID} = PurchaseOrderLineID,",
+				"          {Ordered Outers} = OrderedOuters,",
+				"          {Received Outers} = ReceivedOuters,",
+				"          Package = PackageTypeID",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

@@ -1,0 +1,274 @@
+{
+	"name": "inte",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable31",
+						"type": "DatasetReference"
+					},
+					"name": "pol"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable30",
+						"type": "DatasetReference"
+					},
+					"name": "po"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable20",
+						"type": "DatasetReference"
+					},
+					"name": "supplier"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable21",
+						"type": "DatasetReference"
+					},
+					"name": "suppliercate"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable22",
+						"type": "DatasetReference"
+					},
+					"name": "suptran"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable34",
+						"type": "DatasetReference"
+					},
+					"name": "manualcheck"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable33",
+						"type": "DatasetReference"
+					},
+					"name": "integration"
+				}
+			],
+			"transformations": [
+				{
+					"name": "join3"
+				},
+				{
+					"name": "join4"
+				},
+				{
+					"name": "ingestdate"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "split1"
+				},
+				{
+					"name": "cleaned"
+				},
+				{
+					"name": "surrogateKey1"
+				},
+				{
+					"name": "union1"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "join5"
+				},
+				{
+					"name": "join6"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          PurchaseOrderLineID as integer,",
+				"          PurchaseOrderID as integer,",
+				"          StockItemID as integer,",
+				"          OrderedOuters as integer,",
+				"          Description as string,",
+				"          ReceivedOuters as integer,",
+				"          PackageTypeID as integer,",
+				"          ExpectedUnitPricePerOuter as decimal(18,2),",
+				"          LastReceiptDate as date,",
+				"          IsOrderLineFinalized as boolean,",
+				"          LastEditedBy as integer,",
+				"          LastEditedWhen as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> pol",
+				"source(output(",
+				"          PurchaseOrderID as integer,",
+				"          SupplierID as integer,",
+				"          OrderDate as date,",
+				"          DeliveryMethodID as integer,",
+				"          ContactPersonID as integer,",
+				"          ExpectedDeliveryDate as date,",
+				"          SupplierReference as string,",
+				"          IsOrderFinalized as boolean,",
+				"          Comments as string,",
+				"          InternalComments as string,",
+				"          LastEditedBy as integer,",
+				"          LastEditedWhen as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> po",
+				"source(output(",
+				"          SupplierID as integer,",
+				"          SupplierName as string,",
+				"          SupplierCategoryID as integer,",
+				"          PrimaryContactPersonID as integer,",
+				"          AlternateContactPersonID as integer,",
+				"          DeliveryMethodID as integer,",
+				"          DeliveryCityID as integer,",
+				"          PostalCityID as integer,",
+				"          SupplierReference as string,",
+				"          BankAccountName as string,",
+				"          BankAccountBranch as string,",
+				"          BankAccountCode as string,",
+				"          BankAccountNumber as string,",
+				"          BankInternationalCode as string,",
+				"          PaymentDays as integer,",
+				"          InternalComments as string,",
+				"          PhoneNumber as string,",
+				"          FaxNumber as string,",
+				"          WebsiteURL as string,",
+				"          DeliveryAddressLine1 as string,",
+				"          DeliveryAddressLine2 as string,",
+				"          DeliveryPostalCode as string,",
+				"          DeliveryLocation as binary,",
+				"          PostalAddressLine1 as string,",
+				"          PostalAddressLine2 as string,",
+				"          PostalPostalCode as string,",
+				"          LastEditedBy as integer,",
+				"          ValidFrom as timestamp,",
+				"          ValidTo as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> supplier",
+				"source(output(",
+				"          SupplierCategoryID as integer,",
+				"          SupplierCategoryName as string,",
+				"          LastEditedBy as integer,",
+				"          ValidFrom as timestamp,",
+				"          ValidTo as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> suppliercate",
+				"source(output(",
+				"          SupplierTransactionID as integer,",
+				"          SupplierID as integer,",
+				"          TransactionTypeID as integer,",
+				"          PurchaseOrderID as integer,",
+				"          PaymentMethodID as integer,",
+				"          SupplierInvoiceNumber as string,",
+				"          TransactionDate as date,",
+				"          AmountExcludingTax as decimal(18,2),",
+				"          TaxAmount as decimal(18,2),",
+				"          TransactionAmount as decimal(18,2),",
+				"          OutstandingBalance as decimal(18,2),",
+				"          FinalizationDate as date,",
+				"          IsFinalized as boolean,",
+				"          LastEditedBy as integer,",
+				"          LastEditedWhen as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> suptran",
+				"join6, suppliercate join(supplier@SupplierCategoryID == suppliercate@SupplierCategoryID,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join3",
+				"join3, suptran join(pol@PurchaseOrderID == suptran@PurchaseOrderID,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join4",
+				"join4 derive(ingestdate = currentUTC()) ~> ingestdate",
+				"ingestdate select(mapColumn(",
+				"          each(match(/* All input columns */true()),",
+				"               /* Input name */$$ = $$)",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"po split(SupplierID>1000,",
+				"     SupplierID<0,",
+				"     disjoint: false) ~> split1@(toolargesi, negativesi, clean)",
+				"split1@negativesi derive(SupplierID = abs(SupplierID)) ~> cleaned",
+				"select1 keyGenerate(output(skey as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"split1@clean, cleaned union(byName: false)~> union1",
+				"union1 select(mapColumn(",
+				"          PurchaseOrderID,",
+				"          SupplierID,",
+				"          OrderDate,",
+				"          DeliveryMethodID,",
+				"          ContactPersonID,",
+				"          ExpectedDeliveryDate,",
+				"          SupplierReference,",
+				"          IsOrderFinalized,",
+				"          Comments,",
+				"          InternalComments,",
+				"          LastEditedBy,",
+				"          LastEditedWhen",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"pol, union1 join(pol@PurchaseOrderID == union1@PurchaseOrderID,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join5",
+				"join5, supplier join(union1@SupplierID == supplier@SupplierID,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join6",
+				"split1@toolargesi sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> manualcheck",
+				"surrogateKey1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> integration"
+			]
+		}
+	}
+}

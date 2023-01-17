@@ -1,0 +1,17 @@
+{
+	"name": "AzureSqlTable33",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase3",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "",
+			"table": "integratedpurchase"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

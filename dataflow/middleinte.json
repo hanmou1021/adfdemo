@@ -1,0 +1,217 @@
+{
+	"name": "middleinte",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable51",
+						"type": "DatasetReference"
+					},
+					"name": "middlepol"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable52",
+						"type": "DatasetReference"
+					},
+					"name": "middlepo"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable53",
+						"type": "DatasetReference"
+					},
+					"name": "middlesupplier"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable54",
+						"type": "DatasetReference"
+					},
+					"name": "middlesuppliercate"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable55",
+						"type": "DatasetReference"
+					},
+					"name": "middlestran"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable56",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "join1"
+				},
+				{
+					"name": "join2"
+				},
+				{
+					"name": "join3"
+				},
+				{
+					"name": "join4"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          PurchaseOrderLineID as integer,",
+				"          PurchaseOrderID as integer,",
+				"          StockItemID as integer,",
+				"          OrderedOuters as integer,",
+				"          Description as string,",
+				"          ReceivedOuters as integer,",
+				"          PackageTypeID as integer,",
+				"          ExpectedUnitPricePerOuter as decimal(18,2),",
+				"          LastReceiptDate as date,",
+				"          IsOrderLineFinalized as boolean,",
+				"          LastEditedBy as integer,",
+				"          LastEditedWhen as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> middlepol",
+				"source(output(",
+				"          PurchaseOrderID as integer,",
+				"          SupplierID as integer,",
+				"          OrderDate as date,",
+				"          DeliveryMethodID as integer,",
+				"          ContactPersonID as integer,",
+				"          ExpectedDeliveryDate as date,",
+				"          SupplierReference as string,",
+				"          IsOrderFinalized as boolean,",
+				"          Comments as string,",
+				"          InternalComments as string,",
+				"          LastEditedBy as integer,",
+				"          LastEditedWhen as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> middlepo",
+				"source(output(",
+				"          SupplierID as integer,",
+				"          SupplierName as string,",
+				"          SupplierCategoryID as integer,",
+				"          PrimaryContactPersonID as integer,",
+				"          AlternateContactPersonID as integer,",
+				"          DeliveryMethodID as integer,",
+				"          DeliveryCityID as integer,",
+				"          PostalCityID as integer,",
+				"          SupplierReference as string,",
+				"          BankAccountName as string,",
+				"          BankAccountBranch as string,",
+				"          BankAccountCode as string,",
+				"          BankAccountNumber as string,",
+				"          BankInternationalCode as string,",
+				"          PaymentDays as integer,",
+				"          InternalComments as string,",
+				"          PhoneNumber as string,",
+				"          FaxNumber as string,",
+				"          WebsiteURL as string,",
+				"          DeliveryAddressLine1 as string,",
+				"          DeliveryAddressLine2 as string,",
+				"          DeliveryPostalCode as string,",
+				"          DeliveryLocation as binary,",
+				"          PostalAddressLine1 as string,",
+				"          PostalAddressLine2 as string,",
+				"          PostalPostalCode as string,",
+				"          LastEditedBy as integer,",
+				"          ValidFrom as timestamp,",
+				"          ValidTo as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> middlesupplier",
+				"source(output(",
+				"          SupplierCategoryID as integer,",
+				"          SupplierCategoryName as string,",
+				"          LastEditedBy as integer,",
+				"          ValidFrom as timestamp,",
+				"          ValidTo as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> middlesuppliercate",
+				"source(output(",
+				"          SupplierTransactionID as integer,",
+				"          SupplierID as integer,",
+				"          TransactionTypeID as integer,",
+				"          PurchaseOrderID as integer,",
+				"          PaymentMethodID as integer,",
+				"          SupplierInvoiceNumber as string,",
+				"          TransactionDate as date,",
+				"          AmountExcludingTax as decimal(18,2),",
+				"          TaxAmount as decimal(18,2),",
+				"          TransactionAmount as decimal(18,2),",
+				"          OutstandingBalance as decimal(18,2),",
+				"          FinalizationDate as date,",
+				"          IsFinalized as boolean,",
+				"          LastEditedBy as integer,",
+				"          LastEditedWhen as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> middlestran",
+				"middlepol, middlepo join(middlepol@PurchaseOrderID == middlepo@PurchaseOrderID,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1, middlesupplier join(middlepo@SupplierID == middlesupplier@SupplierID,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join2",
+				"join2, middlesuppliercate join(middlesupplier@SupplierCategoryID == middlesuppliercate@SupplierCategoryID,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join3",
+				"join3, middlestran join(middlepol@PurchaseOrderID == middlestran@PurchaseOrderID,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join4",
+				"join4 select(mapColumn(",
+				"          each(match(/* All input columns */true()),",
+				"               /* Input name */$$ = $$)",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 derive(ingesttime = currentUTC()) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}

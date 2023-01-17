@@ -1,0 +1,143 @@
+{
+	"name": "createdemension",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable35",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable36",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "addkey"
+				},
+				{
+					"name": "validfrom"
+				},
+				{
+					"name": "validto"
+				},
+				{
+					"name": "status"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          PurchaseOrderLineID as integer,",
+				"          PurchaseOrderID as integer,",
+				"          StockItemID as integer,",
+				"          OrderedOuters as integer,",
+				"          Description as string,",
+				"          ReceivedOuters as integer,",
+				"          PackageTypeID as integer,",
+				"          ExpectedUnitPricePerOuter as decimal(18,2),",
+				"          LastReceiptDate as date,",
+				"          IsOrderLineFinalized as boolean,",
+				"          LastEditedBy as integer,",
+				"          LastEditedWhen as timestamp,",
+				"          SupplierID as integer,",
+				"          OrderDate as date,",
+				"          DeliveryMethodID as integer,",
+				"          ContactPersonID as integer,",
+				"          ExpectedDeliveryDate as date,",
+				"          SupplierReference as string,",
+				"          IsOrderFinalized as boolean,",
+				"          Comments as string,",
+				"          InternalComments as string,",
+				"          SupplierName as string,",
+				"          SupplierCategoryID as integer,",
+				"          PrimaryContactPersonID as integer,",
+				"          AlternateContactPersonID as integer,",
+				"          DeliveryCityID as integer,",
+				"          PostalCityID as integer,",
+				"          BankAccountName as string,",
+				"          BankAccountBranch as string,",
+				"          BankAccountCode as string,",
+				"          BankAccountNumber as string,",
+				"          BankInternationalCode as string,",
+				"          PaymentDays as integer,",
+				"          PhoneNumber as string,",
+				"          FaxNumber as string,",
+				"          WebsiteURL as string,",
+				"          DeliveryAddressLine1 as string,",
+				"          DeliveryAddressLine2 as string,",
+				"          DeliveryPostalCode as string,",
+				"          DeliveryLocation as binary,",
+				"          PostalAddressLine1 as string,",
+				"          PostalAddressLine2 as string,",
+				"          PostalPostalCode as string,",
+				"          ValidFrom as timestamp,",
+				"          ValidTo as timestamp,",
+				"          SupplierCategoryName as string,",
+				"          SupplierTransactionID as integer,",
+				"          TransactionTypeID as integer,",
+				"          PaymentMethodID as integer,",
+				"          SupplierInvoiceNumber as string,",
+				"          TransactionDate as date,",
+				"          AmountExcludingTax as decimal(18,2),",
+				"          TaxAmount as decimal(18,2),",
+				"          TransactionAmount as decimal(18,2),",
+				"          OutstandingBalance as decimal(18,2),",
+				"          FinalizationDate as date,",
+				"          IsFinalized as boolean,",
+				"          ingestdate as timestamp,",
+				"          skey as long",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source1 select(mapColumn(",
+				"          {WWI Supplier ID} = SupplierID,",
+				"          Supplier = SupplierName,",
+				"          Category = SupplierCategoryName,",
+				"          {Primary Contact} = PrimaryContactPersonID,",
+				"          {Supplier Reference} = SupplierReference,",
+				"          {Payment Days} = PaymentDays,",
+				"          {Postal Code} = DeliveryPostalCode",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> select1",
+				"select1 aggregate(groupBy({WWI Supplier ID}),",
+				"     each(match(name!='WWI Supplier ID'), $$ = first($$))) ~> aggregate1",
+				"aggregate1 keyGenerate(output(supplierkey as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> addkey",
+				"addkey derive({valid from} = currentUTC()) ~> validfrom",
+				"validfrom derive({valid to} = currentUTC()) ~> validto",
+				"validto derive(status = 'current') ~> status",
+				"status sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}

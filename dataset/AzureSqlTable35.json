@@ -1,0 +1,288 @@
+{
+	"name": "AzureSqlTable35",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase3",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "PurchaseOrderLineID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "PurchaseOrderID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "StockItemID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "OrderedOuters",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Description",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ReceivedOuters",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "PackageTypeID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ExpectedUnitPricePerOuter",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "LastReceiptDate",
+				"type": "date"
+			},
+			{
+				"name": "IsOrderLineFinalized",
+				"type": "bit"
+			},
+			{
+				"name": "LastEditedBy",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "LastEditedWhen",
+				"type": "datetime2",
+				"scale": 7
+			},
+			{
+				"name": "SupplierID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "OrderDate",
+				"type": "date"
+			},
+			{
+				"name": "DeliveryMethodID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ContactPersonID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ExpectedDeliveryDate",
+				"type": "date"
+			},
+			{
+				"name": "SupplierReference",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IsOrderFinalized",
+				"type": "bit"
+			},
+			{
+				"name": "Comments",
+				"type": "nvarchar"
+			},
+			{
+				"name": "InternalComments",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SupplierName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SupplierCategoryID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "PrimaryContactPersonID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "AlternateContactPersonID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DeliveryCityID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "PostalCityID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "BankAccountName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BankAccountBranch",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BankAccountCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BankAccountNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BankInternationalCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PaymentDays",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "PhoneNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "FaxNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WebsiteURL",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DeliveryAddressLine1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DeliveryAddressLine2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DeliveryPostalCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DeliveryLocation",
+				"type": "varbinary"
+			},
+			{
+				"name": "PostalAddressLine1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PostalAddressLine2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PostalPostalCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ValidFrom",
+				"type": "datetime2",
+				"scale": 7
+			},
+			{
+				"name": "ValidTo",
+				"type": "datetime2",
+				"scale": 7
+			},
+			{
+				"name": "SupplierCategoryName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SupplierTransactionID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "TransactionTypeID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "PaymentMethodID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "SupplierInvoiceNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TransactionDate",
+				"type": "date"
+			},
+			{
+				"name": "AmountExcludingTax",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "TaxAmount",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "TransactionAmount",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "OutstandingBalance",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "FinalizationDate",
+				"type": "date"
+			},
+			{
+				"name": "IsFinalized",
+				"type": "bit"
+			},
+			{
+				"name": "ingestdate",
+				"type": "datetime2",
+				"scale": 7
+			},
+			{
+				"name": "skey",
+				"type": "bigint",
+				"precision": 19
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "integratedpurchase"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

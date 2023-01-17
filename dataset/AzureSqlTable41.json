@@ -1,0 +1,32 @@
+{
+	"name": "AzureSqlTable41",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase3",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "keyid",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "entryname",
+				"type": "nvarchar"
+			},
+			{
+				"name": "watermarker",
+				"type": "datetime2",
+				"scale": 7
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "pipelinemaster"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
