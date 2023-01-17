@@ -1,0 +1,16 @@
+{
+	"name": "suppcate",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase4",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"table": "odssupcate"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

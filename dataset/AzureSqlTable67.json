@@ -1,0 +1,16 @@
+{
+	"name": "AzureSqlTable67",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase4",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"table": "odssupptran"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

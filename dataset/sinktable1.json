@@ -1,0 +1,17 @@
+{
+	"name": "sinktable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase3",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "ods",
+			"table": "newcol_pol"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

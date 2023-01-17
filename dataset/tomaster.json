@@ -1,0 +1,32 @@
+{
+	"name": "tomaster",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase4",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "ckey",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "cname",
+				"type": "nvarchar"
+			},
+			{
+				"name": "watermark",
+				"type": "datetime2",
+				"scale": 7
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "pipelinemaster"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

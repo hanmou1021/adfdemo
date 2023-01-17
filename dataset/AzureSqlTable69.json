@@ -1,0 +1,26 @@
+{
+	"name": "AzureSqlTable69",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "tooltp",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "table_schema",
+				"type": "nvarchar"
+			},
+			{
+				"name": "table_name",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "Purchasing",
+			"table": "info"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
