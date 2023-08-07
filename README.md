@@ -1,2 +1,4 @@
+# This is a Azure Data factory data warehouse demension demo test
 # adftest
-Test for ADF code management
+Test for ADF codes 
+
